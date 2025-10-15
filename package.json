@@ -1,0 +1,27 @@
+{
+  "name": "red_contrib_taiponrock1",
+  "version": "1.0.0",
+  "description": "A simple Node-RED node that converts text to lowercase",
+  "main": "node.js",
+  "node-red": {
+    "nodes": {
+      "taiponrock": "node.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChadhaOuederni/node_red_contrib_taiponrock1.git"
+  },
+  "keywords": [
+    "node-red",
+    "taiponrock"
+  ],
+  "author": "ChadhaOuederni",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/AmmarDalel/node-red-contrib-taiponrock/issues"
+  },
+  "homepage": "https://github.com/ChadhaOuederni/node_red_contrib_taiponrock1#readme"}

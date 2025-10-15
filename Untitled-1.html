@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>المساعد الصوتي التعليمي للأطفال</title>
+  <style>
+    body {
+      font-family: "Cairo", "Tahoma", sans-serif;
+      background-color: #f3f7ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      direction: rtl;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      width: 420px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #3a6ea5;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-size: 18px;
+      resize: none;
+      outline: none;
+      text-align: right;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      color: #fff;
+    }
+
+    #btnLire {
+      background-color: #5c9ded;
+    }
+    #btnLire:hover {
+      background-color: #4c8bdb;
+    }
+
+    #btnParler {
+      background-color: #63cc6c;
+    }
+    #btnParler:hover {
+      background-color: #4fbb57;
+    }
+
+    #resultat {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: right;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎓 المساعد الصوتي التعليمي للأطفال</h1>
+
+    <textarea id="texte" placeholder="اكتب الجملة التي تريد أن تسمعها..."></textarea><br>
+
+    <button id="btnLire">🔊 قراءة النص</button>
+    <button id="btnParler">🎤 تحدّث</button>
+
+    <div id="resultat"></div>
+  </div>
+
+  <footer>© 2025 - مشروع الذكاء الاصطناعي التعليمي</footer>
+
+  <script>
+    // ===============================
+    // MODULE TTS (تحويل النص إلى كلام)
+    // ===============================
+    class ModuleTTS {
+      lireTexte(texte) {
+        if (!texte) {
+          alert("من فضلك اكتب نصًا للقراءة!");
+          return;
+        }
+        const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance(texte);
+        utterance.lang = "ar-SA"; // العربية (السعودية)
+        utterance.pitch = 1;
+        utterance.rate = 0.9; // سرعة منخفضة للأطفال
+        synth.speak(utterance);
+      }
+    }
+
+    // ===============================
+    // MODULE STT (تحويل الكلام إلى نص)
+    // ===============================
+    class ModuleSTT {
+      ecouterAudio(callback) {
+        if (!("webkitSpeechRecognition" in window)) {
+          alert("ميزة التعرف على الصوت غير مدعومة في هذا المتصفح.");
+          return;
+        }
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = "ar-SA"; // اللغة العربية
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onresult = function (event) {
+          const texte = event.results[0][0].transcript;
+          callback(texte);
+        };
+
+        recognition.onerror = function () {
+          alert("حدث خطأ أثناء التعرف على الصوت.");
+        };
+
+        recognition.start();
+      }
+    }
+
+    // ===============================
+    // INTERFACE UTILISATEUR (الواجهة الرئيسية)
+    // ===============================
+    class InterfaceUtilisateur {
+      constructor() {
+        this.moduleTTS = new ModuleTTS();
+        this.moduleSTT = new ModuleSTT();
+
+        this.boutonLire = document.getElementById("btnLire");
+        this.boutonParler = document.getElementById("btnParler");
+        this.zoneTexte = document.getElementById("texte");
+        this.zoneResultat = document.getElementById("resultat");
+
+        this.initialiserEvenements();
+      }
+
+      initialiserEvenements() {
+        this.boutonLire.addEventListener("click", () => {
+          const texte = this.zoneTexte.value.trim();
+          this.moduleTTS.lireTexte(texte);
+        });
+
+        this.boutonParler.addEventListener("click", () => {
+          this.moduleSTT.ecouterAudio((texteReconnu) => {
+            this.zoneResultat.innerText = "النص المُعترف به: " + texteReconnu;
+          });
+        });
+      }
+    }
+
+    // ===============================
+    // LANCEMENT
+    // ===============================
+    window.onload = () => {
+      new
